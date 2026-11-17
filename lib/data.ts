@@ -1,9 +1,10 @@
 import { asc, desc, eq } from 'drizzle-orm'
 import { getDb, schema } from '@/lib/db'
-import { DEFAULT_PROFILE, TIME_ZONE, type Activity, type DashboardData, type PlanItem } from '@/lib/rangkai'
+import { DEFAULT_PROFILE, TIME_ZONE, type Activity, type DashboardData, type Deposit, type PlanItem } from '@/lib/rangkai'
 
 const dayKeyFormat = new Intl.DateTimeFormat('en-CA', { timeZone: TIME_ZONE, year: 'numeric', month: '2-digit', day: '2-digit' })
 const shortDayFormat = new Intl.DateTimeFormat('id-ID', { timeZone: TIME_ZONE, day: 'numeric', month: 'short' })
+const fullDayFormat = new Intl.DateTimeFormat('id-ID', { timeZone: TIME_ZONE, day: 'numeric', month: 'short', year: 'numeric' })
 const dueFormat = new Intl.DateTimeFormat('id-ID', { timeZone: 'UTC', month: 'short', year: 'numeric' })
 
 // "Baru saja" / "Hari ini" / "Kemarin" / "12 Nov", dihitung dalam zona waktu WIB.
@@ -20,10 +21,12 @@ export function dueLabel(dueDate: string | null) {
 
 export async function getDashboard(): Promise<DashboardData> {
   const db = getDb()
-  const [profileRows, itemRows, activityRows] = await db.batch([
+  const [profileRows, categoryRows, itemRows, depositRows, activityRows] = await db.batch([
     db.select().from(schema.profile).where(eq(schema.profile.id, 1)),
+    db.select().from(schema.categories).orderBy(asc(schema.categories.id)),
     db.select().from(schema.planItems).orderBy(asc(schema.planItems.id)),
-    db.select().from(schema.activities).orderBy(desc(schema.activities.createdAt), desc(schema.activities.id)).limit(20),
+    db.select().from(schema.deposits).orderBy(desc(schema.deposits.createdAt), desc(schema.deposits.id)),
+    db.select().from(schema.activities).orderBy(desc(schema.activities.createdAt), desc(schema.activities.id)).limit(100),
   ])
 
   const profileRow = profileRows[0]
@@ -35,8 +38,17 @@ export async function getDashboard(): Promise<DashboardData> {
     category: row.category,
     target: row.target,
     saved: row.saved,
+    dueDate: row.dueDate,
     due: dueLabel(row.dueDate),
     icon: row.icon,
+  }))
+
+  const deposits: Deposit[] = depositRows.map(row => ({
+    id: row.id,
+    itemId: row.itemId,
+    amount: row.amount,
+    note: row.note,
+    date: fullDayFormat.format(row.createdAt),
   }))
 
   const activities: Activity[] = activityRows.map(row => ({
@@ -45,11 +57,14 @@ export async function getDashboard(): Promise<DashboardData> {
     detail: row.detail,
     amount: row.amount ?? undefined,
     time: activityTimeLabel(row.createdAt, now),
+    fromDeposit: row.depositId !== null,
   }))
 
   return {
     profile: profileRow ? { nameOne: profileRow.nameOne, nameTwo: profileRow.nameTwo, targetDate: profileRow.targetDate } : DEFAULT_PROFILE,
+    categories: categoryRows.map(row => ({ id: row.id, name: row.name, icon: row.icon })),
     items,
+    deposits,
     activities,
   }
 }

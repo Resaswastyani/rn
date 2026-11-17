@@ -7,22 +7,24 @@ import type { ReactNode, RefObject } from 'react'
 type FormDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
+  onOpenChangeComplete?: (open: boolean) => void
   icon: ReactNode
   kicker: string
   title: string
   description?: ReactNode
   initialFocus?: RefObject<HTMLElement | null>
+  wide?: boolean
   children: ReactNode
 }
 
 // Dialog dari Base UI: fokus terkunci di dalam dialog, Esc dan klik di luar menutup, aria otomatis.
-export function FormDialog({ open, onOpenChange, icon, kicker, title, description, initialFocus, children }: FormDialogProps) {
+export function FormDialog({ open, onOpenChange, onOpenChangeComplete, icon, kicker, title, description, initialFocus, wide, children }: FormDialogProps) {
   return (
-    <Dialog.Root open={open} onOpenChange={next => onOpenChange(next)}>
+    <Dialog.Root open={open} onOpenChange={next => onOpenChange(next)} onOpenChangeComplete={onOpenChangeComplete}>
       <Dialog.Portal>
         <Dialog.Backdrop className="dialog-backdrop" />
         <Dialog.Viewport className="dialog-viewport">
-          <Dialog.Popup className="dialog liquid-panel" initialFocus={initialFocus}>
+          <Dialog.Popup className={`dialog liquid-panel${wide ? ' dialog-wide' : ''}`} initialFocus={initialFocus}>
             <Dialog.Close className="dialog-close" aria-label="Tutup">
               <X size={18} />
             </Dialog.Close>

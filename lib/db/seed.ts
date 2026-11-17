@@ -4,7 +4,7 @@ import { config } from 'dotenv'
 import { neon } from '@neondatabase/serverless'
 import { count } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/neon-http'
-import { activities, deposits, planItems, profile } from './schema'
+import { activities, categories, deposits, planItems, profile } from './schema'
 
 config({ path: '.env', quiet: true })
 
@@ -28,8 +28,17 @@ const items = [
   { name: 'Seserahan keluarga', category: 'Lamaran', target: 4_500_000, saved: 1_000_000, dueDate: '2027-07-01', icon: 'sparkles' },
 ]
 
+const defaultCategories = [
+  { name: 'Lamaran', icon: 'sparkles' },
+  { name: 'Pernikahan', icon: 'heart' },
+  { name: 'Rumah', icon: 'home' },
+  { name: 'Perhiasan', icon: 'gem' },
+  { name: 'Busana', icon: 'shirt' },
+]
+
 async function main() {
   await db.insert(profile).values({ id: 1, nameOne: 'Adinda', nameTwo: 'Dimas', targetDate: '2027-07-24' }).onConflictDoNothing()
+  await db.insert(categories).values(defaultCategories).onConflictDoNothing()
 
   const [{ value: existing }] = await db.select({ value: count() }).from(planItems)
   if (existing > 0) {

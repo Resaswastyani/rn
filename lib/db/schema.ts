@@ -14,13 +14,23 @@ export const profile = pgTable(
   t => [check('profile_singleton', sql`${t.id} = 1`)],
 )
 
+// Kategori rencana. Item merujuk ke nama kategori, jadi mengganti nama ikut memperbarui semua item.
+export const categories = pgTable('categories', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull().unique(),
+  icon: text('icon').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+})
+
 // Rencana & kebutuhan. Nominal dalam rupiah utuh.
 export const planItems = pgTable(
   'plan_items',
   {
     id: serial('id').primaryKey(),
     name: text('name').notNull(),
-    category: text('category').notNull(),
+    category: text('category')
+      .notNull()
+      .references(() => categories.name, { onUpdate: 'cascade', onDelete: 'restrict' }),
     icon: text('icon').notNull(),
     target: bigint('target', { mode: 'number' }).notNull(),
     saved: bigint('saved', { mode: 'number' }).notNull().default(0),
@@ -42,12 +52,13 @@ export const deposits = pgTable(
       .notNull()
       .references(() => planItems.id, { onDelete: 'cascade' }),
     amount: bigint('amount', { mode: 'number' }).notNull(),
+    note: text('note'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   t => [index('deposits_item_id_idx').on(t.itemId), check('deposits_amount_positive', sql`${t.amount} > 0`)],
 )
 
-// Linimasa aktivitas.
+// Linimasa aktivitas. Aktivitas yang lahir dari setoran ikut terhapus bila setorannya dihapus.
 export const activities = pgTable(
   'activities',
   {
@@ -56,7 +67,8 @@ export const activities = pgTable(
     detail: text('detail').notNull(),
     amount: bigint('amount', { mode: 'number' }),
     itemId: integer('item_id').references(() => planItems.id, { onDelete: 'set null' }),
+    depositId: integer('deposit_id').references(() => deposits.id, { onDelete: 'cascade' }),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
-  t => [index('activities_created_at_idx').on(t.createdAt)],
+  t => [index('activities_created_at_idx').on(t.createdAt), index('activities_deposit_id_idx').on(t.depositId)],
 )

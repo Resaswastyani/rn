@@ -199,3 +199,89 @@ h1 em,.section-heading h2 em { color: #ff929e; }
 
 /* Cegah .app-shell ikut tergulir menyamping saat fokus pindah (blob dekorasi keluar 130px ke kanan). */
 .app-shell { overflow: clip; }
+
+/* ───── CRUD ───── */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* Aksi per baris kebutuhan */
+.need-row { grid-template-columns: 39px minmax(130px,1fr) minmax(105px,155px) auto; }
+.row-actions { display: flex; gap: 6px; }
+@media (max-width: 760px) { .need-row { grid-template-columns: 34px minmax(0,1fr) auto; } .row-actions { flex-direction: column; } }
+
+/* Warna ikon tambahan */
+.need-icon.camera { color: #8fc1d8; background: #1f2a2f; }
+.need-icon.utensils { color: #e2b56f; background: #2e281e; }
+.need-icon.car { color: #9fb0e6; background: #232633; }
+.need-icon.gift { color: #ec8fb4; background: #31222b; }
+.need-icon.plane { color: #7fd0b8; background: #1d2c28; }
+
+.heading-actions { display: flex; align-items: center; gap: 4px; }
+.heading-actions .category-reset { display: inline-flex; align-items: center; gap: 4px; }
+.activity-links { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 14px; }
+
+/* Dialog lebar + form */
+.dialog.dialog-wide { width: min(100%, 560px); }
+.dialog .form-row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; align-items: start; }
+.dialog input[type=month],.dialog input[type=date] { color-scheme: dark; }
+.dialog-footer { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+.dialog-footer .dialog-submit { flex: 1; margin-top: 0; }
+.empty-dialog { display: flex; flex-direction: column; gap: 14px; }
+.item-summary-line { display: flex; align-items: center; gap: 7px; color: #a9a299; font-size: 10px; }
+.item-summary-line .link-button { margin-left: auto; }
+.link-button { padding: 0; border: 0; background: none; color: #f1936d; font-size: 10px; cursor: pointer; }
+.link-button:hover { text-decoration: underline; }
+.item-summary { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; padding: 12px 14px; border: 1px solid #312e2a; border-radius: 9px; background: #151413; }
+.item-summary-numbers { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.item-summary-numbers strong { color: #f1ece5; font-size: 17px; font-weight: 600; letter-spacing: -.3px; }
+.item-summary-numbers span { color: #8f8980; font-size: 10px; }
+
+/* Tombol */
+.ghost-button,.danger-button,.danger-outline-button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 13px; border-radius: 6px; font-size: 11px; cursor: pointer; }
+.ghost-button { border: 1px solid #3a3732; color: #c9c2b9; background: #23221f; }
+.ghost-button:hover { border-color: #57524a; color: #f1ece5; }
+.danger-button { border: 1px solid #a8474b; color: #fff; background: linear-gradient(115deg,#d9474f,#ef6a62); }
+.danger-button:hover { background: linear-gradient(115deg,#e5545b,#f77b72); }
+.danger-button:disabled { opacity: .65; cursor: progress; }
+.danger-outline-button { height: 39px; border: 1px solid #5a3033; color: #ff8f8f; background: #2a1b1c; }
+.danger-outline-button:hover { border-color: #a8474b; color: #ffb0ab; }
+.small-button { height: 34px; padding: 0 14px; font-size: 11px; }
+.mini-button { display: grid; place-items: center; width: 27px; height: 27px; padding: 0; border: 1px solid #3a3732; border-radius: 6px; background: #242320; color: #b9b1a7; cursor: pointer; }
+.mini-button:hover { border-color: #bd7452; color: #ffa17d; }
+.mini-button.danger:hover { border-color: #a8474b; color: #ff8f8f; }
+
+/* Daftar kelola */
+.manage-section-title { margin: 22px 0 6px; color: #8a847b; font-size: 9px; letter-spacing: 1.2px; }
+.manage-list { max-height: min(42vh, 340px); margin: 0 -8px; padding: 0 8px; overflow-y: auto; list-style: none; overscroll-behavior: contain; }
+.manage-row { display: grid; grid-template-columns: 32px minmax(0,1fr) auto; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #2c2a26; }
+.manage-row:last-child { border-bottom: 0; }
+.manage-row.editing { display: block; padding: 12px 0; }
+.manage-icon { display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid #33302b; border-radius: 8px; color: #c9a08a; background: #26221e; }
+.manage-icon.is-money { color: #8dbb99; background: #1f2a22; }
+.manage-main { display: flex; min-width: 0; flex-direction: column; gap: 4px; }
+.manage-main strong { overflow: hidden; color: #e6e0d8; font-size: 11px; font-weight: 500; white-space: nowrap; text-overflow: ellipsis; }
+.manage-main small { overflow: hidden; color: #8a847b; font-size: 9px; white-space: nowrap; text-overflow: ellipsis; }
+.manage-actions { display: flex; gap: 6px; }
+.dialog form.inline-form { gap: 11px; padding: 12px; border: 1px solid #3a3530; border-radius: 9px; background: #161514; }
+.inline-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+/* Pemilih ikon (Ark UI RadioGroup) */
+.icon-picker { display: flex; flex-direction: column; gap: 7px; }
+.icon-picker-label { color: #c6bfb6; font-size: 10px; }
+.icon-picker-options { display: flex; flex-wrap: wrap; gap: 6px; }
+.icon-picker-item { cursor: pointer; }
+.icon-picker-control { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid #383631; border-radius: 7px; color: #9d968d; background: #141413; transition: border-color .15s, color .15s, background .15s; }
+.icon-picker-item:hover .icon-picker-control { border-color: #57524a; color: #e8e1d9; }
+.icon-picker-control[data-state=checked] { border-color: #dd825c; color: #f3946d; background: #32241e; }
+.icon-picker-control[data-focus-visible] { box-shadow: 0 0 0 2px #dd825c55; }
+
+/* Konfirmasi hapus (Base UI AlertDialog), di atas dialog lain */
+.confirm-backdrop { z-index: 20; }
+.confirm-viewport { z-index: 21; }
+.dialog.confirm-dialog { width: min(100%, 380px); }
+.dialog-icon.danger { color: #ff8f8f; background: #3a2224; }
+.confirm-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+
+@media (max-width: 520px) {
+  .dialog .form-row { grid-template-columns: 1fr; }
+  .dialog { padding: 22px 18px; }
+}
