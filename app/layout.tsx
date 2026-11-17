@@ -6,23 +6,7 @@ export const metadata: Metadata = {
   title: 'Rangkai — Rencana menuju selamanya',
   description: 'Satu tempat untuk merangkai rencana lamaran dan pernikahan, memantau kebutuhan, dan menabung bersama.',
   generator: 'v0.app',
-  icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
-  },
+  // Ikon diambil otomatis dari app/favicon.ico, app/icon.svg, dan app/apple-icon.png (buat ulang: pnpm icons).
 }
 
 export const viewport: Viewport = {
